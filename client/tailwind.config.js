@@ -5,6 +5,14 @@ module.exports = {
       fontFamily: {
         dm: ["DM Sans", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
+        heading: ["Bowlby One", "sans-serif"],
+      },
+      fontWeight: {
+        100: "100",
+        200: "200",
+        400: "400",
+        500: "500",
+        800: "800",
       },
       colors: {
         brand: {

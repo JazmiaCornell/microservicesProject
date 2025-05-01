@@ -1,0 +1,73 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
+function Signin() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  // data will be the string we send from our server
+  const submitHandler = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:8080/signin", {
+        username: username,
+        password: password,
+      })
+      .then((data) => {
+        console.log(data);
+        setUsername("");
+        setPassword("");
+      });
+  };
+
+  return (
+    <div>
+      <form
+        className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-24 h-auto"
+        onSubmit={submitHandler}
+      >
+        <h3 className="pb-6 text-4xl md:text-6xl text-center text-black font-poppins font-medium">
+          Sign In
+        </h3>
+        <p className="text-center mb-3">Sign in to your account</p>
+        <label className="block mb-1 text-lg" htmlFor="username">
+          Username
+        </label>
+        <input
+          className="w-full p-2 mb-4 focus:outline-none border border-black border-300"
+          id="username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <label className="block mb-1 text-lg" htmlFor="password">
+          Password
+        </label>
+        <input
+          className="w-full p-2 mb-4 focus:outline-none border border-black border-300"
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="flex justify-center space-x-8 mt-4">
+          <button
+            className="w-1/2 px-3 py-1 bg-blue1 bg-400 text-white"
+            type="submit"
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+      <p className="text-center py-3">
+        Not a member?{" "}
+        <Link to="/signup" className="hover:underline">
+          Create a new account
+        </Link>
+      </p>
+    </div>
+  );
+}
+
+export default Signin;
