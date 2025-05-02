@@ -1,24 +1,23 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { signin } from "../store/authSlice";
+import { Link, Navigate } from "react-router-dom";
 
 function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const user = useSelector((state) => state.auth.user);
+  const error = useSelector((state) => state.auth.error);
+  const dispatch = useDispatch();
 
   // data will be the string we send from our server
   const submitHandler = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:8080/signin", {
-        username: username,
-        password: password,
-      })
-      .then((data) => {
-        console.log(data);
-        setUsername("");
-        setPassword("");
-      });
+    dispatch(signin({ username, password })).then((res) => {
+      console.log(res);
+      setUsername("");
+      setPassword("");
+    });
   };
 
   return (
@@ -59,6 +58,10 @@ function Signin() {
             Sign In
           </button>
         </div>
+        {error ? (
+          <p className="pt-10 text-center text-red-600">{error}</p>
+        ) : null}
+        {user ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">
         Not a member?{" "}

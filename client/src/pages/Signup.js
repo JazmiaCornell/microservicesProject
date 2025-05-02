@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../store/authSlice";
 import { Link, Navigate } from "react-router-dom";
-import axios from "axios";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -8,28 +9,23 @@ function Signup() {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user);
+  const error = useSelector((state) => state.auth.error);
+  const dispatch = useDispatch();
 
   // data will be the string we send from our server
   const submitHandler = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:8080/signup", {
-        username: username,
-        password: password,
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-      })
-      .then((res) => {
+    dispatch(signup({ username, password, first_name, last_name, email })).then(
+      (res) => {
         console.log(res);
         setFirstName("");
         setLastName("");
         setEmail("");
         setUsername("");
         setPassword("");
-        setUser(res.data.username);
-      });
+      }
+    );
   };
 
   return (
@@ -114,7 +110,10 @@ function Signup() {
             Sign Up
           </button>
         </div>
-        {user ? <Navigate to="/dashboard" replace={true} state={user} /> : null}
+        {error ? (
+          <p className="pt-10 text-center text-red-600">{error}</p>
+        ) : null}
+        {user ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">
         Become a part of our community and easily track the good you give.

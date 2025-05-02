@@ -1,8 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
-  const location = useLocation();
-  const user = location.state;
+  const user = useSelector((state) => state.auth.user);
   return (
     <div>
       <h3 className="pb-6 text-2xl text-center">Account Dashboard</h3>
