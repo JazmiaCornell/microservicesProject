@@ -37,6 +37,11 @@ export default function Navigation() {
                   </Link>
                 </li>
                 <li>
+                  <Link className="hover:underline" to="/profile">
+                    PROFILE
+                  </Link>
+                </li>
+                <li>
                   <Link className="hover:underline" to="/donations">
                     DONATIONS
                   </Link>
@@ -52,7 +57,7 @@ export default function Navigation() {
             <>
               <Link to="/dashboard">
                 <button className="px-4 py-2 rounded-md border text-white bg-blue1">
-                  CIRCLE
+                  WELCOME
                 </button>
               </Link>
               <Link to="/" onClick={() => dispatch(logout())}>
