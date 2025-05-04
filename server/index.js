@@ -49,6 +49,85 @@ app.post("/signup", (req, res) => {
   });
 });
 
+app.post("/profile", (req, res) => {
+  const user_id = req.body.user_id;
+  const username = req.body.username;
+  const password = req.body.password;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  const email = req.body.email;
+  const street = req.body.street;
+  const city = req.body.city;
+  const state = req.body.state;
+  const postal_code = req.body.postal_code;
+
+  console.log(req.body);
+
+  if (password) {
+    bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+      if (err) {
+        console.error("Error hashing password:", err);
+        return res.status(500).send("Couldn't hash password.");
+      }
+
+      db.query(
+        "UPDATE users SET username=?, password=?, first_name=?, last_name=?, email=?, street=?, city=?, state=?, postal_code=? WHERE user_id=?",
+        [
+          username,
+          hashedPassword,
+          first_name,
+          last_name,
+          email,
+          street,
+          city,
+          state,
+          postal_code,
+          user_id,
+        ],
+        (err, result) => {
+          if (err) {
+            console.error("Error updating user:", err);
+            return res.status(500).send("Failed to update profile.");
+          }
+
+          if (result.affectedRows === 0) {
+            return res.status(404).send("User not found.");
+          }
+
+          res.send({ message: "Profile updated successfully" });
+        }
+      );
+    });
+  } else {
+    db.query(
+      "UPDATE users SET username=?, first_name=?, last_name=?, email=?, street=?, city=?, state=?, postal_code=? WHERE user_id=?",
+      [
+        username,
+        first_name,
+        last_name,
+        email,
+        street,
+        city,
+        state,
+        postal_code,
+        user_id,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating user:", err);
+          return res.status(500).send("Failed to update profile.");
+        }
+
+        if (result.affectedRows === 0) {
+          return res.status(404).send("User not found.");
+        }
+
+        res.send({ message: "Profile updated successfully" });
+      }
+    );
+  }
+});
+
 app.post("/signin", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -80,8 +159,7 @@ app.get("/get-user/:username", (req, res) => {
   console.log(`Fetching data for user: ${username}`);
 
   // First query: Retrieve user information
-  const query =
-    "SELECT user_id, first_name, last_name, email FROM users WHERE username= ?";
+  const query = "SELECT * FROM users WHERE username= ?";
 
   db.query(query, [username], (err, results) => {
     if (err) {
@@ -90,40 +168,103 @@ app.get("/get-user/:username", (req, res) => {
         .json({ error: "Error retrieving user information" });
     }
 
-    console.log(results);
-
     if (results.length > 0) {
-      const user = results[0]; // Get user info from the first query
-      console.log(user.user_id);
-
-      const addressQuery = "SELECT * FROM addresses WHERE user_id = ?";
-
-      db.query(addressQuery, [user.user_id], (err, addressResults) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ error: "Error retrieving user address" });
-        }
-
-        if (addressResults.length > 0) {
-          const address = addressResults[0]; // Get address from the second query
-
-          // Combine the user information with the address
-          const combinedResult = {
-            ...user,
-            address: address, // Add the address to the response
-          };
-
-          console.log(combinedResult);
-          return res.json(combinedResult); // Send the combined data as a response
-        } else {
-          // no address found
-          return res.json(user);
-        }
-      });
+      console.log(results);
+      const user = results[0]; // Assuming username is unique
+      return res.json(user);
     } else {
       return res.status(404).json({ message: "User not found" });
     }
+  });
+});
+
+app.get("/donations", (req, res) => {
+  const userId = req.query.userId; // Retrieve userId from the query parameter
+
+  if (!userId) {
+    return res.status(400).send("User ID is required.");
+  }
+
+  db.query(
+    "SELECT * FROM donations WHERE donation_user_id = ?",
+    [userId], // Passing userId as a parameter to avoid SQL injection
+    (err, results) => {
+      if (err) {
+        console.error("Error fetching donations:", err);
+        return res.status(500).send("Failed to fetch donations.");
+      }
+      res.json(results);
+    }
+  );
+});
+
+app.get("/dashboard/total-donations/:username", (req, res) => {
+  const { username } = req.params;
+  db.query(
+    `
+    SELECT user_id
+    FROM users
+    WHERE username = ?
+  `,
+    [username],
+    (err, userRows) => {
+      if (err) {
+        console.error("Error fetching user ID:", err);
+        return res.status(500).send("Error fetching user ID");
+      }
+
+      if (userRows.length === 0) {
+        return res.status(404).send("User not found");
+      }
+
+      const userId = userRows[0].user_id;
+
+      // Now fetch the total donations for 2025 for the specific user
+      db.query(
+        `
+      SELECT SUM(amount) AS total_donations
+      FROM donations
+      WHERE donation_user_id = ? AND YEAR(created_at) = 2025
+    `,
+        [userId],
+        (err, donationRows) => {
+          if (err) {
+            console.error("Error fetching donations:", err);
+            return res.status(500).send("Error fetching donations");
+          }
+
+          const totalDonations = donationRows[0].total_donations || 0;
+          res.json({ total_donations: totalDonations });
+        }
+      );
+    }
+  );
+});
+
+app.get("/dashboard/recent-transactions/:username", (req, res) => {
+  const { username } = req.params;
+
+  // SQL query to fetch recent donations for the user
+  const query = `
+    SELECT donation_id, amount, payment_method, donation_category, status, created_at
+    FROM donations
+    JOIN users ON donation_user_id = user_id
+    WHERE username = ? AND created_at >= CURDATE() - INTERVAL 1 MONTH
+    ORDER BY created_at DESC
+  `;
+
+  // Execute the query
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error("Error fetching recent transactions:", err);
+      return res.status(500).json({
+        error: "An error occurred while fetching recent transactions",
+      });
+    }
+
+    // Send the results back to the client
+    console.log(results);
+    res.json(results);
   });
 });
 
