@@ -17,6 +17,7 @@ import About from "./pages/About";
 import RootLayout from "./layouts/RootLayout";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
+import Donate from "./pages/Donate";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/about" element={<About />} />
+      <Route path="/donate" element={<Donate />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="*" element={<Error />} />
     </Route>
