@@ -1,4 +1,4 @@
-import church from "../images/church.jpg";
+import church from "../images/church.jpg"; // import image
 
 function About() {
   return (
@@ -26,6 +26,7 @@ function About() {
           </p>
         </div>
 
+        {/* image of church */}
         <div className="max-w-xl">
           <img
             src={church}

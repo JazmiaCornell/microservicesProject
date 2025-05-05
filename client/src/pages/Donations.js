@@ -2,48 +2,65 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+// Citation Scope: Implementation of React, Redux, and Axios
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
+
 function Donations() {
+  // get state from redux
   const username = useSelector((state) => state.auth.user);
+
+  // states for data request
   const [userId, setUserId] = useState(null);
   const [donations, setDonations] = useState([]);
+
+  // states for user and donation data
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingDonations, setLoadingDonations] = useState(false);
 
   useEffect(() => {
     if (username) {
+      // tracks state of request
       setLoadingUser(true);
 
-      // Fetch user data
+      // requests user data
       axios
         .get(`http://localhost:8080/get-user/${username}`)
         .then((response) => {
           const data = response.data;
-          console.log(data.user_id); // Log to verify correct user_id
+          console.log(data.user_id);
+
+          // setuserId with returned data
           setUserId(data.user_id);
+          setLoadingUser(false);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-        })
-        .finally(() => setLoadingUser(false));
+          setLoadingUser(false);
+        });
     }
   }, [username]);
 
   useEffect(() => {
     if (userId) {
+      // tracks state of request
       setLoadingDonations(true);
 
-      // Fetch donations data based on userId
+      // requests donation data
       axios
         .get(`http://localhost:8080/donations?userId=${userId}`)
         .then((response) => {
           const data = response.data;
           console.log("Fetched donations:", data); // Log to verify data
           setDonations(data);
+          setLoadingDonations(false);
         })
         .catch((error) => {
           console.error("Error fetching donations data:", error);
-        })
-        .finally(() => setLoadingDonations(false));
+          setLoadingDonations(false);
+        });
     }
   }, [userId]);
 
@@ -51,6 +68,7 @@ function Donations() {
     <div className="container mx-auto p-6">
       <h2 className="text-3xl font-semibold mb-4">Donations</h2>
 
+      {/* Donations Table */}
       {loadingUser ? (
         <p>Loading user data...</p>
       ) : !userId ? (

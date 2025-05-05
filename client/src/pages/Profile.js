@@ -56,11 +56,12 @@ function Profile() {
           setState(data.state || "");
           setPostalCode(data.postal_code || "");
           setOriginalProfile({ ...data });
+          setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-        })
-        .finally(() => setLoading(false));
+          setLoading(false);
+        });
     }
   }, [username]);
 
@@ -96,12 +97,11 @@ function Profile() {
     }
 
     // dispatch profile actions
-    dispatch(submitProfile(updatedProfile))
-      .then((res) => {
-        console.log("Profile updated:", res);
-        navigate("/dashboard");
-      })
-      .finally(() => setLoading(false));
+    dispatch(submitProfile(updatedProfile)).then((res) => {
+      console.log("Profile updated:", res);
+      navigate("/dashboard");
+      setLoading(false);
+    });
 
     // Closes popup
     setIsPopupVisible(false);

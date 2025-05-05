@@ -10,16 +10,31 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-// References: Stripe API - embedded component
+// Citation Scope: Implementation of React, Redux, and Axios
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+// Citation Scope: Implementation of Stripe API
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://docs.stripe.com/checkout/custom/quickstart
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); // public key
 
 const CheckoutForm = () => {
+  // stripe elements
   const stripe = useStripe();
   const elements = useElements();
+
+  // used for redirection
   const navigate = useNavigate();
+
+  // state from redux
   const username = useSelector((state) => state.auth.user);
 
+  // states for donation form
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
@@ -30,12 +45,14 @@ const CheckoutForm = () => {
   const [postalCode, setPostalCode] = useState("");
   const [user_id, setUserId] = useState("");
 
+  // additional states
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     console.log(username);
     if (username) {
+      // requests user data
       axios
         .get(`http://localhost:8080/get-user/${username}`)
         .then((response) => {
@@ -56,9 +73,13 @@ const CheckoutForm = () => {
     }
   }, [username]);
 
+  // form submission handler
   const submitHandler = async (e) => {
+    // prevent default
     e.preventDefault();
     setLoading(true);
+
+    // clears form
     setName("");
     setEmail("");
     setAmount("");
@@ -70,6 +91,7 @@ const CheckoutForm = () => {
     setMessage("");
 
     try {
+      // request to stripe to complete payment
       const res = await fetch("http://localhost:8080/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,8 +104,10 @@ const CheckoutForm = () => {
         }),
       });
 
+      // clientSecret from Stripe
       const { clientSecret } = await res.json();
 
+      // confirmation of payment
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -95,6 +119,7 @@ const CheckoutForm = () => {
         },
       });
 
+      // sends confirmation if successful, else sends error message
       if (result.error) {
         setMessage(result.error.message);
       } else if (result.paymentIntent.status === "succeeded") {
@@ -113,6 +138,7 @@ const CheckoutForm = () => {
         });
 
         setTimeout(() => {
+          // redirects to homepage
           navigate("/");
         }, 2000);
       }
@@ -125,6 +151,7 @@ const CheckoutForm = () => {
   };
 
   return (
+    // Donation form
     <form
       onSubmit={submitHandler}
       className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-10 h-auto"
@@ -133,6 +160,7 @@ const CheckoutForm = () => {
         Make a Donation
       </h2>
       <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Name Input */}
         <div>
           <label className="block mb-1 font-medium">Name</label>
           <input
@@ -153,6 +181,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* Amount Input */}
         <div>
           <label className="block mb-1 font-medium">Amount (USD)</label>
           <input
@@ -163,6 +192,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* Category Input */}
         <div>
           <label className="block mb-1 font-medium">Donation Category</label>
           <input
@@ -173,6 +203,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* Address Input */}
         <div>
           <label className="block mb-1 font-medium">Street Address</label>
           <input
@@ -183,6 +214,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* City Input */}
         <div>
           <label className="block mb-1 font-medium">City</label>
           <input
@@ -193,6 +225,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* State Input */}
         <div>
           <label className="block mb-1 font-medium">State</label>
           <input
@@ -203,6 +236,7 @@ const CheckoutForm = () => {
             className="w-full px-4 py-2 border border-black"
           />
         </div>
+        {/* Postal Code Input */}
         <div>
           <label className="block mb-1 font-medium">Postal Code</label>
           <input
@@ -215,6 +249,7 @@ const CheckoutForm = () => {
         </div>
       </div>
 
+      {/* Card Input */}
       <div className="mb-6">
         <label className="block mb-1 font-medium">Card Details</label>
         <div className="p-4 border border-black">
@@ -222,6 +257,7 @@ const CheckoutForm = () => {
         </div>
       </div>
 
+      {/* Buttons */}
       <div className="flex justify-center space-x-8 mt-4">
         <button
           type="button"
@@ -246,6 +282,7 @@ const CheckoutForm = () => {
   );
 };
 
+// Wrapper for Stripe Element
 const Donate = () => (
   <Elements stripe={stripePromise}>
     <CheckoutForm />

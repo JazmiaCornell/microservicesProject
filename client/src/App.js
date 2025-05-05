@@ -1,4 +1,4 @@
-import cross from "./images/cross.jpg";
+import cross from "./images/cross.jpg"; // import image
 import { Link } from "react-router-dom";
 import Popup from "./pages/Popup";
 import { useState, useEffect } from "react";
@@ -11,13 +11,17 @@ import { useSelector } from "react-redux";
 // Author: TechCheck
 
 function App() {
+  // state for popup
   const [isPopup, setIsPopup] = useState("");
+  // state from redux
   const loggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
+    // shows popup when homepage is loaded
     setIsPopup(true);
   }, []);
 
+  // function to close popup
   const closePopup = () => {
     setIsPopup(false);
   };
@@ -25,6 +29,7 @@ function App() {
   return (
     <section className="relative h-screen bg-white px-10 pt-10">
       <div className="relative w-[90%] h-[90%] mx-auto">
+        {/* image of cross in sky */}
         <img
           src={cross}
           alt="Cross with sky"
@@ -37,10 +42,12 @@ function App() {
             <br />
             Nazareth
           </h1>
+          {/* shows popup to new users */}
           {!loggedIn && isPopup && <Popup onClose={closePopup} />}
           <p className="mt-2 text-xl text-800">
             Where the feast of the Lord is going on.
           </p>
+          {/* Button redirects to about page */}
           <Link to="/about">
             <button className="mt-4 px-6 py-3 text-800 bg-white hover:bg-gray-200 hover:underline font-semibold rounded-md shadow">
               LEARN MORE

@@ -3,9 +3,18 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
 
+// Citation Scope: Implementation of React, Redux, and React-Router
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
+
 export default function Navigation() {
+  // status from redux
   const loggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
+
+  // tracks sizing for mobile device
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -22,7 +31,7 @@ export default function Navigation() {
               Nazareth
             </Link>
 
-            {/* Hamburger Button (Mobile) */}
+            {/* Mobile Navbar */}
             <button
               className="md:hidden"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -59,7 +68,7 @@ export default function Navigation() {
               )}
             </button>
 
-            {/* Nav Links */}
+            {/* Navbar */}
             <ul
               className={`flex-col md:flex md:flex-row md:space-x-10 text-lg space-y-4 md:space-y-0 md:ml-10 ${
                 menuOpen ? "flex mt-4" : "hidden"
@@ -92,6 +101,7 @@ export default function Navigation() {
                   DONATE
                 </Link>
               </li>
+              {/* If logged in, shows additional links */}
               {loggedIn && (
                 <>
                   <li>
@@ -127,7 +137,7 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Auth Buttons (Desktop Only) */}
+        {/* Buttons */}
         <div className="hidden md:flex items-center space-x-4 pl-6">
           {loggedIn ? (
             <>
@@ -159,7 +169,7 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Auth Buttons (Mobile Only) */}
+      {/* Mobile Buttons */}
       {menuOpen && (
         <div className="md:hidden mt-4 px-6 space-y-2">
           {loggedIn ? (

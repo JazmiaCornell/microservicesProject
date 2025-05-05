@@ -1,22 +1,30 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+// Citation Scope: Implementation of React, Redux, and Axios
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
 
 const Dashboard = () => {
+  // state from Redux
   const username = useSelector((state) => state.auth.user);
 
+  // state for data requests
   const [totalDonations, setTotalDonations] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState([]);
 
   useEffect(() => {
     if (username) {
-      // Fetch total donations for 2025 by username
+      // requests donations data, passes username
       const fetchTotalDonations = async () => {
         try {
-          const response = await fetch(
+          const response = await axios.get(
             `/dashboard/total-donations/${username}`
           );
-          const data = await response.json();
-          setTotalDonations(data.total_donations);
+          setTotalDonations(response.data.total_donations);
         } catch (error) {
           console.error("Error fetching total donations:", error);
         }
@@ -25,11 +33,10 @@ const Dashboard = () => {
       // Fetch recent transactions by username from the last month
       const fetchRecentTransactions = async () => {
         try {
-          const response = await fetch(
+          const response = await axios.get(
             `/dashboard/recent-transactions/${username}`
           );
-          const data = await response.json();
-          setRecentTransactions(data);
+          setRecentTransactions(response.data);
         } catch (error) {
           console.error("Error fetching recent transactions:", error);
         }
@@ -50,7 +57,7 @@ const Dashboard = () => {
       <h2 className="text-3xl font-semibold mb-4">Account Dashboard</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Total donation amount */}
+        {/* Total donation Card */}
         <div className="max-w-4xl p-6 bg-white shadow-lg rounded-lg">
           <div className="mb-6">
             <h3 className="text-2xl font-semibold mb-2">
@@ -65,6 +72,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Recent Transactions Table */}
         <div className="max-w-4xl p-6 bg-white shadow-lg rounded-lg">
           <div className="mb-6">
             <h3 className="text-2xl font-semibold mb-2">
