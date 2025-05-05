@@ -3,18 +3,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { signin } from "../store/authSlice";
 import { Link, Navigate } from "react-router-dom";
 
+// Citation Scope: Implementation of React, Redux, React-Router
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
+
 function Signin() {
+  // states for form inputs
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // access states from redux
   const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
 
-  // data will be the string we send from our server
+  // form submission handler
   const submitHandler = (e) => {
+    // prevent default
     e.preventDefault();
+
+    // dispatch signup action
     dispatch(signin({ username, password })).then((res) => {
       console.log(res);
+
+      // clears form after submission
       setUsername("");
       setPassword("");
     });
@@ -22,6 +36,7 @@ function Signin() {
 
   return (
     <div>
+      {/* Signin form */}
       <form
         className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-24 h-auto"
         onSubmit={submitHandler}
@@ -30,6 +45,7 @@ function Signin() {
           Sign In
         </h3>
         <p className="text-center mb-3">Sign in to your account</p>
+        {/* Username input */}
         <label className="block mb-1 text-lg" htmlFor="username">
           Username
         </label>
@@ -40,6 +56,7 @@ function Signin() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        {/* Password input */}
         <label className="block mb-1 text-lg" htmlFor="password">
           Password
         </label>
@@ -50,6 +67,7 @@ function Signin() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {/* Button */}
         <div className="flex justify-center space-x-8 mt-4">
           <button
             className="w-1/2 px-3 py-1 bg-blue1 bg-400 text-white"
@@ -58,9 +76,11 @@ function Signin() {
             Sign In
           </button>
         </div>
+        {/* If failure, sends error */}
         {error ? (
           <p className="pt-10 text-center text-red-600">{error}</p>
         ) : null}
+        {/* If success, sends user to dashboard */}
         {user ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">

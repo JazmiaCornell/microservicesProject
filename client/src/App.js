@@ -1,7 +1,27 @@
 import cross from "./images/cross.jpg";
 import { Link } from "react-router-dom";
+import Popup from "./pages/Popup";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
+// Citation Scope: Implementation redux for user authentication/session, specifically tracking if user is logged in with useSlector
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=x4H3HYPx3yQ&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C&index=5
+// Author: TechCheck
 
 function App() {
+  const [isPopup, setIsPopup] = useState("");
+  const loggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    setIsPopup(true);
+  }, []);
+
+  const closePopup = () => {
+    setIsPopup(false);
+  };
+
   return (
     <section className="relative h-screen bg-white px-10 pt-10">
       <div className="relative w-[90%] h-[90%] mx-auto">
@@ -17,6 +37,7 @@ function App() {
             <br />
             Nazareth
           </h1>
+          {!loggedIn && isPopup && <Popup onClose={closePopup} />}
           <p className="mt-2 text-xl text-800">
             Where the feast of the Lord is going on.
           </p>

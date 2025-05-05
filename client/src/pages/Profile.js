@@ -5,12 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HelpDropdown from "./HelpDropdown";
 
+// Citation Scope: Implementation of React, Redux, React-Router
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
+
 function Profile() {
+  // get states from redux
   const username = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // states for form inputs
   const [userId, setUserId] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -22,18 +30,22 @@ function Profile() {
   const [state, setState] = useState("");
   const [postalCode, setPostalCode] = useState("");
 
+  // states to manage form
   const [originalProfile, setOriginalProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   useEffect(() => {
+    // fetch user's current profile, passing username
     if (username) {
       setLoading(true);
       axios
         .get(`http://localhost:8080/get-user/${username}`)
         .then((response) => {
           const data = response.data;
+
+          // add user information to form with returned data
           setUserId(data.user_id);
           setUser(data.username);
           setFirstName(data.first_name);
@@ -52,11 +64,16 @@ function Profile() {
     }
   }, [username]);
 
+  // form submission handler
   const submitHandler = (e) => {
+    // prevent default
     e.preventDefault();
+
+    // shows confirmation popup
     setIsPopupVisible(true);
   };
 
+  // final confirmation to submite form
   const handleConfirmSave = () => {
     setLoading(true);
 
@@ -73,11 +90,12 @@ function Profile() {
       postal_code: postalCode,
     };
 
-    // Only include the password if it's changed
+    // checks if password was changed, doesn't send if not
     if (password !== originalProfile.password) {
       updatedProfile.password = password;
     }
 
+    // dispatch profile actions
     dispatch(submitProfile(updatedProfile))
       .then((res) => {
         console.log("Profile updated:", res);
@@ -85,14 +103,16 @@ function Profile() {
       })
       .finally(() => setLoading(false));
 
-    // Close the popup after submission
+    // Closes popup
     setIsPopupVisible(false);
   };
 
+  // cancel action
   const handleCancelPopup = () => {
     setIsPopupVisible(false);
   };
 
+  // reverts changes to form/fields
   const cancelEdit = () => {
     setUser(originalProfile.username || "");
     setPassword(originalProfile.password || "");
@@ -108,7 +128,10 @@ function Profile() {
 
   return (
     <div>
+      {/* Help Dropdown component */}
       <HelpDropdown />
+
+      {/* Edit Profile form */}
       <form
         className="mx-auto max-w-5xl border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-10 h-auto space-y-4"
         onSubmit={submitHandler}
@@ -117,8 +140,10 @@ function Profile() {
           Edit Profile
         </h3>
 
+        {/* displays error message */}
         {error && <p className="text-center text-red-500">{error}</p>}
 
+        {/* Username input */}
         <label className="block mb-1 text-lg">Username</label>
         <input
           className="w-full p-2 mb-4 border border-black focus:outline-none"
@@ -128,6 +153,7 @@ function Profile() {
           disabled={!isEditable || loading}
         />
 
+        {/* Password input */}
         <label className="block mb-1 text-lg">Password</label>
         <input
           className="w-full p-2 mb-4 border border-black focus:outline-none"
@@ -137,6 +163,7 @@ function Profile() {
           disabled={!isEditable || loading}
         />
 
+        {/* Name input */}
         <div className="flex space-x-4 mb-4">
           <div className="w-1/2">
             <label className="block mb-1 text-lg">First Name</label>
@@ -160,6 +187,7 @@ function Profile() {
           </div>
         </div>
 
+        {/* Email input */}
         <label className="block mb-1 text-lg">Email</label>
         <input
           className="w-full p-2 mb-4 border border-black focus:outline-none"
@@ -169,6 +197,7 @@ function Profile() {
           disabled={!isEditable || loading}
         />
 
+        {/* Billing address inputs */}
         <label className="block mb-1 text-lg">Street</label>
         <input
           className="w-full p-2 mb-4 border border-black focus:outline-none"
@@ -211,6 +240,7 @@ function Profile() {
           </div>
         </div>
 
+        {/* Cancel and Submit Buttons */}
         <div className="flex justify-center space-x-8 mt-6">
           {!isEditable ? (
             <button
@@ -240,12 +270,15 @@ function Profile() {
           )}
         </div>
       </form>
+
+      {/* Popup */}
       {isPopupVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-md w-96 text-center">
             <p className="text-lg mb-4">
               Are you sure you want to save the changes?
             </p>
+            {/* Popup Buttons */}
             <div className="flex justify-around">
               <button
                 className="px-4 py-2 bg-red-400 text-white rounded-md"

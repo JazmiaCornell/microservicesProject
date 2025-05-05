@@ -3,22 +3,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../store/authSlice";
 import { Link, Navigate } from "react-router-dom";
 
+// Citation Scope: Implementation of React, Redux, React-Router
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
+// Author: TechCheck
+
 function Signup() {
+  // states for form inputs
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
+
+  // access states from redux
   const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
 
-  // data will be the string we send from our server
+  // form submission handler
   const submitHandler = (e) => {
+    // prevent default
     e.preventDefault();
+
+    // dispatch signup action
     dispatch(signup({ username, password, first_name, last_name, email })).then(
       (res) => {
         console.log(res);
+
+        // clears form
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -30,6 +44,7 @@ function Signup() {
 
   return (
     <div>
+      {/* Signup form */}
       <form
         className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-20 h-auto"
         onSubmit={submitHandler}
@@ -43,6 +58,7 @@ function Signup() {
             Sign In
           </Link>
         </p>
+        {/* Name Inputs */}
         <div className="flex space-x-4 mb-4">
           <div className="w-1/2">
             <label className="block mb-1 text-lg" htmlFor="first_name">
@@ -69,6 +85,7 @@ function Signup() {
             />
           </div>
         </div>
+        {/* Email Input */}
         <label className="block mb-1 text-lg" htmlFor="email">
           Email
         </label>
@@ -79,6 +96,7 @@ function Signup() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {/* Username Input */}
         <label className="block mb-1 text-lg" htmlFor="username">
           Username
         </label>
@@ -89,6 +107,7 @@ function Signup() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        {/* Password Input */}
         <label className="block mb-1 text-lg" htmlFor="password">
           Password
         </label>
@@ -99,6 +118,7 @@ function Signup() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {/* Buttons */}
         <div className="flex justify-center space-x-8 mt-4">
           <button className="w-1/2 px-3 py-1 bg-red-400" type="button">
             Cancel
@@ -110,9 +130,11 @@ function Signup() {
             Sign Up
           </button>
         </div>
+        {/* If failure, sends error */}
         {error ? (
           <p className="pt-10 text-center text-red-600">{error}</p>
         ) : null}
+        {/* If success, sends user to dashboard */}
         {user ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">

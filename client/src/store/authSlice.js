@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// Citation Scope: Implementation axios and redux for user authentication/create sessions
+// Date: 05/04/2025
+// Originality: Adapted
+// Source: https://www.youtube.com/watch?v=x4H3HYPx3yQ&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C&index=5
+// Author: TechCheck
+
+// Thunks for signup, signin, and submitting profile
 export const signup = createAsyncThunk(
   "auth/signup",
   async ({ username, password, first_name, last_name, email }, thunkAPI) => {
@@ -19,6 +26,7 @@ export const signup = createAsyncThunk(
     }
   }
 );
+
 export const signin = createAsyncThunk(
   "auth/signin",
   async ({ username, password }, thunkAPI) => {
@@ -35,11 +43,58 @@ export const signin = createAsyncThunk(
   }
 );
 
+export const submitProfile = createAsyncThunk(
+  "profile/submit",
+  async (
+    {
+      user_id,
+      username,
+      password,
+      first_name,
+      last_name,
+      email,
+      street,
+      city,
+      state,
+      postal_code,
+    },
+    thunkAPI
+  ) => {
+    try {
+      const res = await axios.post("http://localhost:8080/profile", {
+        user_id,
+        username,
+        password,
+        first_name,
+        last_name,
+        email,
+        street,
+        city,
+        state,
+        postal_code,
+      });
+      return res.data;
+    } catch (err) {
+      console.error(err);
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
+
 const initialState = {
   user: "",
   isLoggedIn: false,
   loading: false,
   error: null,
+  profile: {
+    first_name: "",
+    last_name: "",
+    email: "",
+    street: "",
+    city: "",
+    state: "",
+    postal_code: "",
+  },
 };
 
 export const authSlice = createSlice({
@@ -80,6 +135,20 @@ export const authSlice = createSlice({
       })
       .addCase(signin.rejected, (state, action) => {
         state.isLoggedIn = false;
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(submitProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(submitProfile.fulfilled, (state, action) => {
+        state.user = action.meta.arg.username;
+        state.isLoggedIn = true;
+        state.loading = false;
+        state.profile = action.payload;
+        state.error = null;
+      })
+      .addCase(submitProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

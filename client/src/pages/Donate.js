@@ -44,13 +44,10 @@ const CheckoutForm = () => {
           setName(fullName);
           setEmail(data.email);
           setUserId(data.user_id);
-
-          if (data.address) {
-            setStreet(data.address.street);
-            setCity(data.address.city);
-            setState(data.address.state);
-            setPostalCode(data.address.zip_code);
-          }
+          setStreet(data.street);
+          setCity(data.city);
+          setState(data.state);
+          setPostalCode(data.postal_code);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -130,7 +127,7 @@ const CheckoutForm = () => {
   return (
     <form
       onSubmit={submitHandler}
-      className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-20 h-auto"
+      className="mx-auto border-2 p-6 md:p-8 w-full max-w-xl border-gray-400 mt-10 h-auto"
     >
       <h2 className="pb-6 text-3xl md:text-6xl text-center text-black font-poppins font-medium">
         Make a Donation
@@ -143,7 +140,7 @@ const CheckoutForm = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -153,7 +150,7 @@ const CheckoutForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -163,7 +160,7 @@ const CheckoutForm = () => {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -173,7 +170,7 @@ const CheckoutForm = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -183,7 +180,7 @@ const CheckoutForm = () => {
             value={street}
             onChange={(e) => setStreet(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -193,7 +190,7 @@ const CheckoutForm = () => {
             value={city}
             onChange={(e) => setCity(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -203,7 +200,7 @@ const CheckoutForm = () => {
             value={state}
             onChange={(e) => setState(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
         <div>
@@ -213,30 +210,30 @@ const CheckoutForm = () => {
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-black"
           />
         </div>
       </div>
 
       <div className="mb-6">
         <label className="block mb-1 font-medium">Card Details</label>
-        <div className="p-4 border border-gray-300 rounded-md bg-gray-100">
+        <div className="p-4 border border-black">
           <CardElement options={{ hidePostalCode: true }} />
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-center space-x-8 mt-4">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="w-1/2 px-3 py-1 bg-red-400 rounded hover:bg-gray-600"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={!stripe || loading}
-          className="px-6 py-2 bg-blue1 text-white rounded hover:bg-blue-600"
+          className="w-1/2 px-3 py-1 bg-blue1 bg-400 text-white rounded hover:bg-gray-600"
         >
           {loading ? "Processing..." : "Donate"}
         </button>
