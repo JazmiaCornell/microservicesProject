@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // import useNavigate
+import { useNavigate } from "react-router-dom";
 
 // Citation Scope: Implementation of React, Redux, and Axios
 // Date: 05/04/2025
@@ -10,7 +10,8 @@ import { useNavigate } from "react-router-dom"; // import useNavigate
 // Author: TechCheck
 
 const Dashboard = () => {
-  const navigate = useNavigate(); // initialize useNavigate
+  // navigates to page
+  const navigate = useNavigate();
 
   // state from Redux
   const username = useSelector((state) => state.auth.user);
@@ -113,7 +114,7 @@ const Dashboard = () => {
                 <div className="mt-4 text-center">
                   <button
                     className="px-6 py-2 bg-blue1 text-white rounded-md focus:outline-none"
-                    onClick={() => navigate("/donations")} // navigate to donations page
+                    onClick={() => navigate("/donations")}
                   >
                     View More Transactions
                   </button>
