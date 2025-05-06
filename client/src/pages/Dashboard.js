@@ -1,24 +1,18 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-// Citation Scope: Implementation of React, Redux, and Axios
-// Date: 05/04/2025
-// Originality: Adapted
-// Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
-// Author: TechCheck
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Dashboard = () => {
-  // state from Redux
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const username = useSelector((state) => state.auth.user);
 
-  // state for data requests
   const [totalDonations, setTotalDonations] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState([]);
 
   useEffect(() => {
     if (username) {
-      // requests donations data, passes username
       const fetchTotalDonations = async () => {
         try {
           const response = await axios.get(
@@ -30,7 +24,6 @@ const Dashboard = () => {
         }
       };
 
-      // Fetch recent transactions by username from the last month
       const fetchRecentTransactions = async () => {
         try {
           const response = await axios.get(
@@ -46,6 +39,11 @@ const Dashboard = () => {
       fetchRecentTransactions();
     }
   }, [username]);
+
+  // Handle click event to navigate to donations page
+  const handleViewMoreClick = () => {
+    navigate("/donations"); // Redirect to the donations page
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -110,7 +108,10 @@ const Dashboard = () => {
                 </table>
                 {/* Button to View More Transactions */}
                 <div className="mt-4 text-center">
-                  <button className="px-6 py-2 bg-blue1 text-white rounded-md focus:outline-none">
+                  <button
+                    className="px-6 py-2 bg-blue1 text-white rounded-md focus:outline-none"
+                    onClick={handleViewMoreClick} // Add onClick handler
+                  >
                     View More Transactions
                   </button>
                 </div>
