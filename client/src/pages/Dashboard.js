@@ -14,14 +14,15 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   // state from Redux
-  const username = useSelector((state) => state.auth.user);
+  const username = useSelector((state) => state.auth.username);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   // state for data requests
   const [totalDonations, setTotalDonations] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState([]);
 
   useEffect(() => {
-    if (username) {
+    if (user_id) {
       const fetchTotalDonations = async () => {
         try {
           const response = await axios.get(
@@ -47,7 +48,7 @@ const Dashboard = () => {
       fetchTotalDonations();
       fetchRecentTransactions();
     }
-  }, [username]);
+  }, [user_id]);
 
   return (
     <div className="container mx-auto p-6">

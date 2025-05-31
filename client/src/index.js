@@ -21,6 +21,22 @@ import Profile from "./pages/Profile";
 import Donate from "./pages/Donate";
 import Donations from "./pages/Donations";
 
+import { jwtDecode } from "jwt-decode";
+import { setUser } from "./store/authSlice";
+
+const token = localStorage.getItem("token");
+if (token) {
+  try {
+    const decoded = jwtDecode(token);
+    store.dispatch(
+      setUser({ user_id: decoded.user_id, username: decoded.username })
+    );
+  } catch (error) {
+    console.error("Invalid token");
+    localStorage.removeItem("token");
+  }
+}
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>

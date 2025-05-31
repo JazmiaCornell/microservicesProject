@@ -30,7 +30,7 @@ function Signup() {
     // dispatch signup action
     dispatch(signup({ username, password, first_name, last_name, email })).then(
       (res) => {
-        console.log(res);
+        console.log(res.payload);
 
         // clears form
         setFirstName("");

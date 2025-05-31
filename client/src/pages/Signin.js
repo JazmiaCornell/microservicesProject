@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signin } from "../store/authSlice";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Citation Scope: Implementation of React, Redux, React-Router
 // Date: 05/04/2025
@@ -18,6 +18,7 @@ function Signin() {
   const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // form submission handler
   const submitHandler = (e) => {
@@ -26,11 +27,16 @@ function Signin() {
 
     // dispatch signup action
     dispatch(signin({ username, password })).then((res) => {
-      console.log(res);
+      if (!res.error) {
+        console.log(res.payload);
 
-      // clears form after submission
-      setUsername("");
-      setPassword("");
+        // clears form after submission
+        setUsername("");
+        setPassword("");
+        navigate("/dashboard");
+      } else {
+        console.log("Login failed:", res.error.message);
+      }
     });
   };
 
@@ -81,7 +87,6 @@ function Signin() {
           <p className="pt-10 text-center text-red-600">{error}</p>
         ) : null}
         {/* If success, sends user to dashboard */}
-        {user ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">
         Not a member?{" "}

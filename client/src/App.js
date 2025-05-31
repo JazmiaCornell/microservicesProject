@@ -18,12 +18,18 @@ function App() {
 
   useEffect(() => {
     // shows popup when homepage is loaded
-    setIsPopup(true);
-  }, []);
+    if (!loggedIn) {
+      const seenPopup = localStorage.getItem("seenPopup");
+      if (!seenPopup) {
+        setIsPopup(true);
+      }
+    }
+  }, [loggedIn]);
 
   // function to close popup
   const closePopup = () => {
     setIsPopup(false);
+    localStorage.setItem("seenPopup", true);
   };
 
   return (

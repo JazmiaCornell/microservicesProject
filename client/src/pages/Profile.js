@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { submitProfile } from "../store/authSlice";
+import { submitProfile, fetchProfile } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HelpDropdown from "./HelpDropdown";
@@ -13,13 +13,12 @@ import HelpDropdown from "./HelpDropdown";
 
 function Profile() {
   // get states from redux
-  const username = useSelector((state) => state.auth.user);
+  const user_id = useSelector((state) => state.auth.user_id);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // states for form inputs
-  const [userId, setUserId] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -37,17 +36,17 @@ function Profile() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   useEffect(() => {
-    // fetch user's current profile, passing username
-    if (username) {
+    // fetch user's current profile, passing user_id
+    if (user_id) {
       setLoading(true);
       axios
-        .get(`http://localhost:8080/get-user/${username}`)
+        .get(`http://localhost:8088/get-user/${user_id}`)
         .then((response) => {
           const data = response.data;
 
           // add user information to form with returned data
-          setUserId(data.user_id);
           setUser(data.username);
+          setPassword(data.password || "");
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setEmail(data.email);
@@ -63,7 +62,7 @@ function Profile() {
           setLoading(false);
         });
     }
-  }, [username]);
+  }, [user_id]);
 
   // form submission handler
   const submitHandler = (e) => {
@@ -75,12 +74,12 @@ function Profile() {
   };
 
   // final confirmation to submite form
-  const handleConfirmSave = () => {
+  const handleConfirmSave = async () => {
     setLoading(true);
 
     // Prepare the profile data for submission
     const updatedProfile = {
-      user_id: userId,
+      user_id,
       username: user,
       first_name: firstName,
       last_name: lastName,
@@ -97,11 +96,12 @@ function Profile() {
     }
 
     // dispatch profile actions
-    dispatch(submitProfile(updatedProfile)).then((res) => {
-      console.log("Profile updated:", res);
-      navigate("/dashboard");
-      setLoading(false);
-    });
+    const res = await dispatch(submitProfile(updatedProfile));
+    console.log("Profile updated:", res.payload);
+
+    await dispatch(fetchProfile(user_id));
+    navigate("/dashboard");
+    setLoading(false);
 
     // Closes popup
     setIsPopupVisible(false);

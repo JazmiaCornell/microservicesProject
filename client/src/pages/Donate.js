@@ -33,6 +33,7 @@ const CheckoutForm = () => {
 
   // state from redux
   const username = useSelector((state) => state.auth.user);
+  const user_id = useSelector((state) => state.auth.user_id);
 
   // states for donation form
   const [name, setName] = useState("");
@@ -43,24 +44,22 @@ const CheckoutForm = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [postalCode, setPostalCode] = useState("");
-  const [user_id, setUserId] = useState("");
 
   // additional states
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    console.log(username);
-    if (username) {
+    console.log(user_id);
+    if (user_id) {
       // requests user data
       axios
-        .get(`http://localhost:8080/get-user/${username}`)
+        .get(`http://localhost:8088/get-user/${user_id}`)
         .then((response) => {
           const data = response.data;
           const fullName = `${data.first_name} ${data.last_name}`;
           setName(fullName);
           setEmail(data.email);
-          setUserId(data.user_id);
           setStreet(data.street);
           setCity(data.city);
           setState(data.state);
@@ -71,7 +70,7 @@ const CheckoutForm = () => {
           setMessage("Could not retrieve user data.");
         });
     }
-  }, [username]);
+  }, [user_id]);
 
   // form submission handler
   const submitHandler = async (e) => {
@@ -129,13 +128,36 @@ const CheckoutForm = () => {
           amount,
           category,
         };
+        const formData = {
+          name,
+          email,
+          amount,
+          category,
+          street,
+          city,
+          state,
+          postalCode,
+        };
 
-        // Send the data to your backend to save it in the database
-        await fetch("http://localhost:8080/donations", {
+        if (user_id) {
+          // Send the data to your backend to save it in the database
+          await fetch("http://localhost:8080/donations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(donation),
+          });
+        }
+
+        const res = await fetch("http://localhost:5013/receipt", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(donation),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         });
+
+        const result = await res.json();
+        console.log(result.message);
 
         setTimeout(() => {
           // redirects to homepage
