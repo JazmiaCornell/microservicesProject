@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { submitProfile, fetchProfile } from "../store/authSlice";
+import { submitProfile, fetchProfile, logout } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HelpDropdown from "./HelpDropdown";
@@ -33,6 +33,7 @@ function Profile() {
   const [originalProfile, setOriginalProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [isDeletePopupVisible, setDeletePopupVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   useEffect(() => {
@@ -110,6 +111,12 @@ function Profile() {
   // cancel action
   const handleCancelPopup = () => {
     setIsPopupVisible(false);
+    setDeletePopupVisible(false);
+  };
+
+  // delete action
+  const handleDeletePopup = () => {
+    setDeletePopupVisible(true);
   };
 
   // reverts changes to form/fields
@@ -124,6 +131,17 @@ function Profile() {
     setState(originalProfile.state || "");
     setPostalCode(originalProfile.postal_code || "");
     setIsEditable(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log("Delete confirmed");
+    try {
+      await axios.delete(`http://localhost:8088/delete-user/${user_id}`);
+      dispatch(logout());
+      navigate("/");
+    } catch (err) {
+      console.log("Error deleting account:", error);
+    }
   };
 
   return (
@@ -243,13 +261,22 @@ function Profile() {
         {/* Cancel and Submit Buttons */}
         <div className="flex justify-center space-x-8 mt-6">
           {!isEditable ? (
-            <button
-              type="button"
-              className="w-full px-3 py-2 bg-blue1 text-white"
-              onClick={() => setIsEditable(true)}
-            >
-              Edit
-            </button>
+            <>
+              <button
+                type="button"
+                className="w-full px-3 py-2 bg-blue1 text-white"
+                onClick={() => setIsEditable(true)}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="w-full px-3 py-2 bg-red-400 text-white"
+                onClick={handleDeletePopup}
+              >
+                Delete
+              </button>
+            </>
           ) : (
             <>
               <button
@@ -289,6 +316,30 @@ function Profile() {
               <button
                 className="px-4 py-2 bg-blue1 text-white rounded-md"
                 onClick={handleConfirmSave}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isDeletePopupVisible && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-md w-96 text-center">
+            <p className="text-lg mb-4">
+              Are you sure you want to permanently delete your account?
+            </p>
+            {/* Popup Buttons */}
+            <div className="flex justify-around">
+              <button
+                className="px-4 py-2 bg-red-400 text-white rounded-md"
+                onClick={handleCancelPopup}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue1 text-white rounded-md"
+                onClick={handleConfirmDelete}
               >
                 Confirm
               </button>
