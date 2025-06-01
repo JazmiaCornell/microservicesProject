@@ -15,7 +15,6 @@ function Signin() {
   const [password, setPassword] = useState("");
 
   // access states from redux
-  const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();

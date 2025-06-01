@@ -32,7 +32,6 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
 
   // state from redux
-  const username = useSelector((state) => state.auth.user);
   const user_id = useSelector((state) => state.auth.user_id);
 
   // states for donation form
@@ -48,6 +47,10 @@ const CheckoutForm = () => {
   // additional states
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [formValid, setFormValid] = useState("");
+
+  const isValidEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   useEffect(() => {
     console.log(user_id);
@@ -76,7 +79,27 @@ const CheckoutForm = () => {
   const submitHandler = async (e) => {
     // prevent default
     e.preventDefault();
+    setFormValid("");
     setLoading(true);
+
+    if (
+      !name ||
+      !email ||
+      !amount ||
+      !category ||
+      !street ||
+      !city ||
+      !state ||
+      !postalCode
+    ) {
+      setFormValid("All fields are required");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setFormValid("Please enter a valid email address.");
+      return;
+    }
 
     // clears form
     setName("");
@@ -296,7 +319,11 @@ const CheckoutForm = () => {
           {loading ? "Processing..." : "Donate"}
         </button>
       </div>
-
+      {formValid && (
+        <p className="pt-6 text-center text-red-600 font-semibold">
+          {formValid}
+        </p>
+      )}
       {message && (
         <p className="mt-4 text-center text-red-600 font-medium">{message}</p>
       )}

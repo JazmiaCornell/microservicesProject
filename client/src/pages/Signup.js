@@ -16,16 +16,31 @@ function Signup() {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [formValid, setFormValid] = useState("");
 
   // access states from redux
-  const user = useSelector((state) => state.auth.user);
+  const user_id = useSelector((state) => state.auth.user_id);
   const error = useSelector((state) => state.auth.error);
   const dispatch = useDispatch();
+
+  const isValidEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   // form submission handler
   const submitHandler = (e) => {
     // prevent default
     e.preventDefault();
+    setFormValid("");
+
+    if (!first_name || !last_name || !email || !username || !password) {
+      setFormValid("All fields are required");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setFormValid("Please enter a valid email address.");
+      return;
+    }
 
     // dispatch signup action
     dispatch(signup({ username, password, first_name, last_name, email })).then(
@@ -131,11 +146,17 @@ function Signup() {
           </button>
         </div>
         {/* If failure, sends error */}
+        {/* Client-side Validation Error */}
+        {formValid && (
+          <p className="pt-6 text-center text-red-600 font-semibold">
+            {formValid}
+          </p>
+        )}
         {error ? (
           <p className="pt-10 text-center text-red-600">{error}</p>
         ) : null}
         {/* If success, sends user to dashboard */}
-        {user ? <Navigate to="/dashboard" replace={true} /> : null}
+        {user_id ? <Navigate to="/dashboard" replace={true} /> : null}
       </form>
       <p className="text-center py-3">
         Become a part of our community and easily track the good you give.
