@@ -91,7 +91,7 @@ const CheckoutForm = () => {
 
     try {
       // request to stripe to complete payment
-      const res = await fetch("http://localhost:8080/create-payment-intent", {
+      const res = await fetch("http://localhost:8089/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -141,7 +141,7 @@ const CheckoutForm = () => {
 
         if (user_id) {
           // Send the data to your backend to save it in the database
-          await fetch("http://localhost:8080/donations", {
+          await fetch("http://localhost:8081/donations", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(donation),
@@ -161,7 +161,7 @@ const CheckoutForm = () => {
 
         setTimeout(() => {
           // redirects to homepage
-          navigate("/");
+          navigate("/dashboard");
         }, 2000);
       }
     } catch (err) {

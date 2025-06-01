@@ -26,7 +26,7 @@ const Dashboard = () => {
       const fetchTotalDonations = async () => {
         try {
           const response = await axios.get(
-            `/dashboard/total-donations/${username}`
+            `http://localhost:8081/dashboard/total-donations/${user_id}`
           );
           setTotalDonations(response.data.total_donations);
         } catch (error) {
@@ -37,7 +37,7 @@ const Dashboard = () => {
       const fetchRecentTransactions = async () => {
         try {
           const response = await axios.get(
-            `/dashboard/recent-transactions/${username}`
+            `http://localhost:8081/dashboard/recent-transactions/${user_id}`
           );
           setRecentTransactions(response.data);
         } catch (error) {
@@ -51,7 +51,7 @@ const Dashboard = () => {
   }, [user_id]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {username ? (
         <h4 className="pb-6 text-4xl md:text-6xl text-center text-black font-poppins">
           Hi, {username}
@@ -61,11 +61,12 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Total donation Card */}
-        <div className="max-w-4xl p-6 bg-white shadow-lg rounded-lg">
+        <div className="w-full p-6 bg-white shadow-lg rounded-lg">
           <div className="mb-6">
             <h3 className="text-2xl font-semibold mb-2">
-              Donations This Year (2025):
+              Donations This Year ({new Date().getFullYear()}):
             </h3>
+
             <p className="font-heading text-7xl text-blue1 text-center mt-10">
               ${totalDonations}
             </p>
@@ -82,14 +83,14 @@ const Dashboard = () => {
               Recent Donations (Last Month):
             </h3>
             {recentTransactions.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full table-auto">
+              <div className="w-full overflow-x-auto">
+                <table className="min-w-full table-auto text-center">
                   <thead className="bg-gray-100">
                     <tr>
-                      <th className="px-4 py-2 text-left">Date</th>
-                      <th className="px-4 py-2 text-left">Amount</th>
-                      <th className="px-4 py-2 text-left">Payment Method</th>
-                      <th className="px-4 py-2 text-left">Category</th>
+                      <th className="px-4 py-2">Date</th>
+                      <th className="px-4 py-2">Amount</th>
+                      <th className="px-4 py-2">Payment Method</th>
+                      <th className="px-4 py-2">Category</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -98,7 +99,15 @@ const Dashboard = () => {
                       .map((transaction, index) => (
                         <tr key={index} className="border-b hover:bg-gray-50">
                           <td className="px-4 py-2">
-                            {transaction.created_at}
+                            {new Date(
+                              transaction.created_at
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
                           </td>
                           <td className="px-4 py-2">${transaction.amount}</td>
                           <td className="px-4 py-2">
@@ -111,6 +120,7 @@ const Dashboard = () => {
                       ))}
                   </tbody>
                 </table>
+
                 {/* Button to View More Transactions */}
                 <div className="mt-4 text-center">
                   <button

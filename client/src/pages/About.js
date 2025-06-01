@@ -2,14 +2,16 @@ import church from "../images/church.jpg"; // import image
 
 function About() {
   return (
-    <section className="relative h-screen bg-white px-10 pt-10">
-      <div className="relative w-[90%] h-[90%] mx-auto bg-grey rounded-xl flex items-center justify-between px-10">
-        <div className="max-w-xl text-center p-10">
-          <h1 className="text-7xl font-extrabold font-heading leading-tight">
+    <section className="relative min-h-screen bg-white px-4 pt-10 sm:px-10">
+      <div className="relative w-full max-w-7xl h-[90vh] mx-auto bg-grey rounded-xl flex flex-col sm:flex-row items-center justify-between px-4 sm:px-10 gap-8">
+        <div className="max-w-xl text-center sm:text-left p-6 sm:p-10">
+          <h1 className="text-4xl font-extrabold font-heading leading-tight sm:text-7xl ">
             About Us
           </h1>
-          <h2 className="font-heading font-normal text-3xl">Our Mission</h2>
-          <p className="mt-2 text-xl text-800 text-justify">
+          <h2 className="font-heading font-normal text-2xl sm:text-3xl mt-4">
+            Our Mission
+          </h2>
+          <p className="mt-2 text-base sm:text-xl text-800 text-justify">
             To spread love. <br /> It&#39;s simple, but powerful. Through
             worship, service, fellowship, and outreach, we aim to reflect
             God&#39;s love in all aspects of our lives. Whether it&#39;s lending
