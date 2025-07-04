@@ -18,6 +18,7 @@ function Donations() {
     const fetchDonations = async () => {
       try {
         setLoadingDonations(true);
+        console.log("Sending to microservice-D", { user_id });
         const response = await axios.get(
           `http://localhost:8081/donations/${user_id}`
         );

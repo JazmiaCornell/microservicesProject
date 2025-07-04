@@ -12,6 +12,13 @@ import { jwtDecode } from "jwt-decode";
 export const signup = createAsyncThunk(
   "auth/signup",
   async ({ username, password, first_name, last_name, email }, thunkAPI) => {
+    console.log("Sending to microservice-B for signup:", {
+      username,
+      password,
+      first_name,
+      last_name,
+      email,
+    });
     try {
       const res = await axios.post("http://localhost:8088/signup", {
         username,
@@ -20,9 +27,6 @@ export const signup = createAsyncThunk(
         last_name,
         email,
       });
-
-      console.log("Response status:", res.status); // Should be 200 or 201
-      console.log("Response data:", res.data);
 
       const token = res.data.token;
       const decoded = jwtDecode(token);
@@ -50,6 +54,10 @@ export const signup = createAsyncThunk(
 export const signin = createAsyncThunk(
   "auth/signin",
   async ({ username, password }, thunkAPI) => {
+    console.log("Sending to microservice-B for login:", {
+      username,
+      password,
+    });
     try {
       const res = await axios.post("http://localhost:8088/signin", {
         username,
@@ -113,6 +121,9 @@ export const submitProfile = createAsyncThunk(
 export const fetchProfile = createAsyncThunk(
   "profile/fetch",
   async (user_id, thunkAPI) => {
+    console.log("Sending to microservice-B for account information:", {
+      user_id,
+    });
     try {
       const res = await axios.get(`http://localhost:8088/get-user/${user_id}`);
       return res.data;

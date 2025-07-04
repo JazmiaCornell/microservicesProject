@@ -32,7 +32,7 @@ function Signin() {
         // clears form after submission
         setUsername("");
         setPassword("");
-        navigate("/dashboard");
+        navigate("/");
       } else {
         console.log("Login failed:", res.error.message);
       }

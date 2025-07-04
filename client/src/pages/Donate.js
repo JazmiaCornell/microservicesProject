@@ -114,6 +114,7 @@ const CheckoutForm = () => {
 
     try {
       // request to stripe to complete payment
+      console.log("Sending information to microservice-C");
       const res = await fetch("http://localhost:8089/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,6 +147,10 @@ const CheckoutForm = () => {
         setMessage(result.error.message);
       } else if (result.paymentIntent.status === "succeeded") {
         setMessage("Donation successful! Thank you!");
+        const cardElement = elements.getElement(CardElement);
+        if (cardElement) {
+          cardElement.clear();
+        }
         const donation = {
           user_id,
           amount,
@@ -163,6 +168,9 @@ const CheckoutForm = () => {
         };
 
         if (user_id) {
+          console.log("Sending to microservice-D:", {
+            donation,
+          });
           // Send the data to your backend to save it in the database
           await fetch("http://localhost:8081/donations", {
             method: "POST",
@@ -171,6 +179,9 @@ const CheckoutForm = () => {
           });
         }
 
+        console.log("Sending to microservice-A:", {
+          formData,
+        });
         const res = await fetch("http://localhost:5013/receipt", {
           method: "POST",
           headers: {
@@ -184,7 +195,7 @@ const CheckoutForm = () => {
 
         setTimeout(() => {
           // redirects to homepage
-          navigate("/dashboard");
+          navigate("/");
         }, 2000);
       }
     } catch (err) {

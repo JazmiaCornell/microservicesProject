@@ -23,6 +23,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (user_id) {
+      console.log("Sending to microservice-D:", {
+        user_id,
+      });
       const fetchTotalDonations = async () => {
         try {
           const response = await axios.get(
@@ -36,6 +39,9 @@ const Dashboard = () => {
 
       const fetchRecentTransactions = async () => {
         try {
+          console.log("Sending to microservice-D:", {
+            user_id,
+          });
           const response = await axios.get(
             `http://localhost:8081/dashboard/recent-transactions/${user_id}`
           );
