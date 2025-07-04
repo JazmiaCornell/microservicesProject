@@ -138,7 +138,7 @@ function Profile() {
   const handleConfirmDelete = async () => {
     console.log("Delete confirmed");
     try {
-      await axios.delete(`${userApi}/delete-user/${user_id}`);
+      await axios.delete(`${usersApi}/delete-user/${user_id}`);
       dispatch(logout());
       navigate("/");
     } catch (err) {
