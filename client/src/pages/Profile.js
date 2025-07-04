@@ -11,6 +11,8 @@ import HelpDropdown from "./HelpDropdown";
 // Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
 // Author: TechCheck
 
+const usersApi = process.env.REACT_APP_USERS_API;
+
 function Profile() {
   // get states from redux
   const user_id = useSelector((state) => state.auth.user_id);
@@ -41,7 +43,7 @@ function Profile() {
     if (user_id) {
       setLoading(true);
       axios
-        .get(`http://localhost:8088/get-user/${user_id}`)
+        .get(`${usersApi}/${user_id}`)
         .then((response) => {
           const data = response.data;
 
@@ -136,7 +138,7 @@ function Profile() {
   const handleConfirmDelete = async () => {
     console.log("Delete confirmed");
     try {
-      await axios.delete(`http://localhost:8088/delete-user/${user_id}`);
+      await axios.delete(`${userApi}/delete-user/${user_id}`);
       dispatch(logout());
       navigate("/");
     } catch (err) {

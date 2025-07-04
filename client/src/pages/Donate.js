@@ -23,6 +23,8 @@ import { useSelector } from "react-redux";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); // public key
 
+const usersApi = process.env.REACT_APP_USERS_API;
+
 const CheckoutForm = () => {
   // stripe elements
   const stripe = useStripe();
@@ -57,7 +59,7 @@ const CheckoutForm = () => {
     if (user_id) {
       // requests user data
       axios
-        .get(`http://localhost:8088/get-user/${user_id}`)
+        .get(`${usersApi}/get-user/${user_id}`)
         .then((response) => {
           const data = response.data;
           const fullName = `${data.first_name} ${data.last_name}`;

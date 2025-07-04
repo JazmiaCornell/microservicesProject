@@ -8,6 +8,8 @@ import { jwtDecode } from "jwt-decode";
 // Source: https://www.youtube.com/watch?v=x4H3HYPx3yQ&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C&index=5
 // Author: TechCheck
 
+const usersApi = process.env.REACT_APP_USERS_API;
+
 // Thunks for signup, signin, and submitting profile
 export const signup = createAsyncThunk(
   "auth/signup",
@@ -20,7 +22,7 @@ export const signup = createAsyncThunk(
       email,
     });
     try {
-      const res = await axios.post("http://localhost:8088/signup", {
+      const res = await axios.post(`${usersApi}/signup`, {
         username,
         password,
         first_name,
@@ -59,7 +61,7 @@ export const signin = createAsyncThunk(
       password,
     });
     try {
-      const res = await axios.post("http://localhost:8088/signin", {
+      const res = await axios.post(`${usersApi}/signin`, {
         username,
         password,
       });
@@ -98,7 +100,7 @@ export const submitProfile = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const res = await axios.post("http://localhost:8088/profile", {
+      const res = await axios.post(`${usersApi}/profile`, {
         user_id,
         username,
         password,
@@ -125,7 +127,7 @@ export const fetchProfile = createAsyncThunk(
       user_id,
     });
     try {
-      const res = await axios.get(`http://localhost:8088/get-user/${user_id}`);
+      const res = await axios.get(`${usersApi}/get-user/${user_id}`);
       return res.data;
     } catch (err) {
       console.log(err);
