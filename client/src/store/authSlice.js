@@ -30,8 +30,16 @@ export const signup = createAsyncThunk(
         email,
       });
 
+      console.log("Signup response data:", res.data);
+
       const token = res.data.token;
+
+      if (!token || typeof token !== "string") {
+        throw new Error("Invalid or missing token in signup response");
+      }
+
       const decoded = jwtDecode(token);
+      console.log("Decoded token:", decoded);
 
       // store token
       localStorage.setItem("token", token);
@@ -43,7 +51,7 @@ export const signup = createAsyncThunk(
 
       // return res.data;
     } catch (err) {
-      console.log(err);
+      console.log("Signup error", err);
       return thunkAPI.rejectWithValue(
         typeof err.response?.data === "string"
           ? err.response.data
