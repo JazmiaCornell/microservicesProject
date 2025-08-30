@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+// import jwtDecode from "jwt-decode";
+
+const jwtDecode = require("jwt-decode").default || require("jwt-decode");
 
 // Citation Scope: Implementation axios and redux for user authentication/create sessions
 // Date: 05/04/2025
