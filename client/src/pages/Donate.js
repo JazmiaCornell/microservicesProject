@@ -25,6 +25,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); 
 
 const usersApi = process.env.REACT_APP_USERS_API;
 const paymentApi = process.env.REACT_APP_PAYMENT_API;
+const donationsApi = process.env.REACT_APP_DONATIONS_API;
 
 const CheckoutForm = () => {
   // stripe elements
@@ -175,7 +176,7 @@ const CheckoutForm = () => {
             donation,
           });
           // Send the data to your backend to save it in the database
-          await fetch("http://localhost:8081/donations", {
+          await fetch(`${donationsApi}/donations`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(donation),

@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 // Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
 // Author: TechCheck
 
+const donationsApi = process.env.REACT_APP_DONATIONS_API;
+
 const Dashboard = () => {
   // navigates to page
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ const Dashboard = () => {
       const fetchTotalDonations = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:8081/dashboard/total-donations/${user_id}`
+            `${donationsApi}/dashboard/total-donations/${user_id}`
           );
           setTotalDonations(response.data.total_donations);
         } catch (error) {
@@ -43,7 +45,7 @@ const Dashboard = () => {
             user_id,
           });
           const response = await axios.get(
-            `http://localhost:8081/dashboard/recent-transactions/${user_id}`
+            `${donationsApi}/dashboard/recent-transactions/${user_id}`
           );
           setRecentTransactions(response.data);
         } catch (error) {

@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 // Source: https://www.youtube.com/watch?v=dICDmbgGFdE&list=PLzF6FKB4VN3_8lYlLOsJI8hElGLRgUs7C
 // Author: TechCheck
 
+const donationsApi = process.env.REACT_APP_DONATIONS_API;
+
 function Donations() {
   const user_id = useSelector((state) => state.auth.user_id);
 
@@ -20,7 +22,7 @@ function Donations() {
         setLoadingDonations(true);
         console.log("Sending to microservice-D", { user_id });
         const response = await axios.get(
-          `http://localhost:8081/donations/${user_id}`
+          `${donationsApi}/donations/${user_id}`
         );
         console.log("Fetched donations");
         setDonations(response.data);
