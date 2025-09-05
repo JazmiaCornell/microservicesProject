@@ -34,6 +34,7 @@ const Dashboard = () => {
             `${donationsApi}/dashboard/total-donations/${user_id}`
           );
           setTotalDonations(response.data.total_donations);
+          console.log(response.data.total_donations);
         } catch (error) {
           console.error("Error fetching total donations:", error);
         }
