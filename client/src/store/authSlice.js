@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode as jwtDecodeLib } from "jwt-decode";
 const jwtDecode = jwtDecodeLib; // re-export as if it were default
+// had to go this route because of railway error, expected default
 // import { jwtDecode } from "jwt-decode";
 
 // const jwtDecode = require("jwt-decode").default || require("jwt-decode");

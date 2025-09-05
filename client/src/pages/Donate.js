@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); // public key
 
 const usersApi = process.env.REACT_APP_USERS_API;
+const paymentApi = process.env.REACT_APP_PAYMENT_API;
 
 const CheckoutForm = () => {
   // stripe elements
@@ -117,7 +118,7 @@ const CheckoutForm = () => {
     try {
       // request to stripe to complete payment
       console.log("Sending information to microservice-C");
-      const res = await fetch("http://localhost:8089/create-payment-intent", {
+      const res = await fetch(`${paymentApi}/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
