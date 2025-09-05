@@ -47,9 +47,14 @@ const Dashboard = () => {
           const response = await axios.get(
             `${donationsApi}/dashboard/recent-transactions/${user_id}`
           );
-          setRecentTransactions(response.data);
+          const data = Array.isArray(response.data)
+            ? response.data
+            : response.data.transactions || [];
+
+          setRecentTransactions(data);
         } catch (error) {
           console.error("Error fetching recent transactions:", error);
+          setRecentTransactions([]); // ensures an array is always returned
         }
       };
 
