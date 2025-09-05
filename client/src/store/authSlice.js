@@ -71,10 +71,13 @@ export const signin = createAsyncThunk(
       password,
     });
     try {
-      const res = await axios.post(`${usersApi}/signin`, {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        "https://microservice-b-production.up.railway.app/signin",
+        {
+          username,
+          password,
+        }
+      );
       // return res.data;
       const token = res.data.token;
       const decoded = jwtDecode(token);
