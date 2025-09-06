@@ -26,7 +26,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); 
 const usersApi = process.env.REACT_APP_USERS_API;
 const paymentApi = process.env.REACT_APP_PAYMENT_API;
 const donationsApi = process.env.REACT_APP_DONATIONS_API;
-const receiptApi = process.env.REACT_APP_RECEIPT_API;
+// const receiptApi = process.env.REACT_APP_RECEIPT_API;
 
 const CheckoutForm = () => {
   // stripe elements
