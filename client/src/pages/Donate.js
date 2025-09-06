@@ -187,13 +187,16 @@ const CheckoutForm = () => {
         console.log("Sending to microservice-A:", {
           formData,
         });
-        const res = await fetch(`${receiptApi}/receipt`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const res = await fetch(
+          "https://microservice-a-production.up.railway.app/receipt",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         const result = await res.json();
         console.log(result.message);
