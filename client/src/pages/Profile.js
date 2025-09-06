@@ -43,7 +43,7 @@ function Profile() {
     if (user_id) {
       setLoading(true);
       axios
-        .get(`${usersApi}/${user_id}`)
+        .get(`${usersApi}/get-user/${user_id}`)
         .then((response) => {
           const data = response.data;
 
