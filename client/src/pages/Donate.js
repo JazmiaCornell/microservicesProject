@@ -26,6 +26,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY); 
 const usersApi = process.env.REACT_APP_USERS_API;
 const paymentApi = process.env.REACT_APP_PAYMENT_API;
 const donationsApi = process.env.REACT_APP_DONATIONS_API;
+const receiptApi = process.env.REACT_APP_RECEIPT_API;
 
 const CheckoutForm = () => {
   // stripe elements
@@ -186,7 +187,7 @@ const CheckoutForm = () => {
         console.log("Sending to microservice-A:", {
           formData,
         });
-        const res = await fetch("http://localhost:5013/receipt", {
+        const res = await fetch(`${receiptApi}/receipt`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
