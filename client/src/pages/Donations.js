@@ -24,8 +24,17 @@ function Donations() {
         const response = await axios.get(
           `${donationsApi}/donations/${user_id}`
         );
-        console.log("Fetched donations");
-        setDonations(response.data);
+        console.log("Fetched donations:", response.data);
+
+        // Defensive handling: make sure donations is always an array
+        const fetchedDonations = [];
+        if (Array.isArray(response.data)) {
+          fetchedDonations = response.data;
+        } else if (response.data && Array.isArray(response.data.donations)) {
+          fetchedDonations = response.data.donations;
+        }
+
+        setDonations(fetchedDonations);
       } catch (error) {
         if (error.response) {
           console.error("Server error:", error.response.data);

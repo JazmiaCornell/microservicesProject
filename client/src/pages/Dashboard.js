@@ -34,7 +34,6 @@ const Dashboard = () => {
             `${donationsApi}/dashboard/total-donations/${user_id}`
           );
           setTotalDonations(response.data.total_donations);
-          console.log(response.data.total_donations);
         } catch (error) {
           console.error("Error fetching total donations:", error);
         }
@@ -82,7 +81,7 @@ const Dashboard = () => {
             </h3>
 
             <p className="font-heading text-7xl text-blue1 text-center mt-10">
-              ${totalDonations}
+              ${totalDonations > 0 ? totalDonations : "0.00"}
             </p>
             <p className="text-center font-dm mt-5">
               Your total contributions this year
