@@ -187,19 +187,34 @@ const CheckoutForm = () => {
         console.log("Sending to microservice-A:", {
           formData,
         });
-        const res = await fetch(
-          "https://microservice-a-production.up.railway.app/receipt",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          }
-        );
+        try {
+          const res = await fetch(
+            "https://microservice-a-production.up.railway.app/receipt",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            }
+          );
 
-        const result = await res.json();
-        console.log(result.message);
+          if (!res.ok) {
+            // If response is not 2xx, throw an error
+            const text = await res.text(); // try to get server response
+            throw new Error(
+              `Microservice-A responded with status ${res.status}: ${text}`
+            );
+          }
+
+          const result = await res.json();
+          console.log(result.message);
+        } catch (error) {
+          console.error("Error sending receipt to microservice-A:", error);
+          setMessage(
+            "There was a problem generating your receipt. Please try again."
+          );
+        }
 
         setTimeout(() => {
           // redirects to homepage
