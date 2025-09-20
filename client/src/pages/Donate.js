@@ -183,10 +183,10 @@ const CheckoutForm = () => {
             body: JSON.stringify(donation),
           });
         }
-
+        /*
         console.log("Sending to microservice-A:", {
           formData,
-        });
+        }); 
         try {
           const res = await fetch(
             "https://microservice-a-production.up.railway.app/receipt",
@@ -214,11 +214,11 @@ const CheckoutForm = () => {
           setMessage(
             "There was a problem generating your receipt. Please try again."
           );
-        }
+        } */
 
         setTimeout(() => {
           // redirects to homepage
-          navigate("https://microservicesproject-production.up.railway.app");
+          navigate("/");
         }, 2000);
       }
     } catch (err) {
