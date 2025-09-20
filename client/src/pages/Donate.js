@@ -218,7 +218,7 @@ const CheckoutForm = () => {
 
         setTimeout(() => {
           // redirects to homepage
-          navigate("/");
+          navigate("https://microservicesproject-production.up.railway.app");
         }, 2000);
       }
     } catch (err) {
