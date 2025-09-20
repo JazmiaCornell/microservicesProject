@@ -160,7 +160,7 @@ const CheckoutForm = () => {
           user_id,
           amount,
           category,
-        };
+        }; /*
         const formData = {
           name,
           email,
@@ -170,7 +170,7 @@ const CheckoutForm = () => {
           city,
           state,
           postalCode,
-        };
+        }; */
 
         if (user_id) {
           console.log("Sending to microservice-D:", {
